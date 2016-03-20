@@ -110,9 +110,8 @@ class AnoneApp < Sinatra::Base
     limit = 1
     limit = params[:limit].to_i if params[:limit]
     messages = if params[:since]
-                 since = 
                  Message.all(:order => [ :id.asc ],
-                             :created_at.gt => Time.parse(params[:since]),
+                             :created_at.lt => Time.parse(params[:since]),
                              :limit => limit)
                else
                  Message.all(:order => [ :id.asc ], :limit => limit)
