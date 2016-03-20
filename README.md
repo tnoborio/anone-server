@@ -76,8 +76,9 @@ curl "http://localhost:4567/api/papa/messages?since=2016-03-20T11:44:44+09:00"
 
 Audio message
 
--> [{"id":11,"from":"papa","to":"papa","type":"audio","message":"Hello","created_at":"2016-03-20T11:47:39+09:00"}]
+-> [{"id":2,"from":"papa","to":"child","type":"audio","message":"Hello","url":"http://13.71.156.156:4567/api/messages/2.wav","created_at":"2016-03-20T15:21:46+09:00"}]
 
 Stamp message
 
--> [{"id":11,"from":"papa","to":"papa","type":"audio","message":"Hello","created_at":"2016-03-20T11:47:39+09:00"}]
+-> [{"id":1,"from":"papa","to":"child","type":"stamp","message":"Hello","url":"http://13.71.156.156:4567/api/messages/1.png","created_at":"2016-03-20T15:21:46+09:00"}]
+
