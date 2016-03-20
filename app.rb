@@ -61,12 +61,12 @@ class AnoneApp < Sinatra::Base
 
   post '/api/:from/audios' do
     ok_with_create(:audio) {|message|
-      "/api/#{params[:from]}/audios/#{message[:id]}"}
+      URL + "/api/#{params[:from]}/audios/#{message[:id]}"}
   end
 
   post '/api/:from/stamps' do
     ok_with_create(:stamp) {|message|
-      "/api/#{params[:from]}/stamps/#{message[:id]}"}
+      URL + "/api/#{params[:from]}/stamps/#{message[:id]}"}
   end
 
   def ok_with_binary_save id, path, url
