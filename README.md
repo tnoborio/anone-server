@@ -8,9 +8,9 @@ anone API server
 
 #### send audio text
 
-POST /api/<from>/audios
+POST /api/[from]/audios
 
-- <from>: child or papa
+- [from]: child or papa
 
 request data
 
@@ -19,25 +19,25 @@ request data
 
 Example:
 
-curl -d "to=child" -d "message=Hello" http://localhost:4567/api/papa/audios
+curl -d "to=child" -d "message=Hello" http://13.71.156.156:4567/api/papa/audios
 
--> {"content":{"id":14,"from":"papa","to":"papa","type":"audio","message":"Hello","created_at":"2016-03-20T12:18:29+09:00"},"post_path":"/api/papa/audios/14","status":"ok"}
+   -> {"content":{"id":3,"from":"papa","to":"child","type":"audio","message":"Hello","url":null,"created_at":"2016-03-20T06:50:18+00:00"},"post_path":"http://13.71.156.156:4567/api/papa/audios/3","status":"ok"}
 
-Then post audio binary data. use response "post_path" key's value (ex. "/api/papa/audios/14")
+Then post audio binary data. use response "post_path" key's value (ex. "/api/papa/audios/3")
 
 #### send audio binary data
 
-POST /api/<from>/audios/<id>
+POST /api/[from]/audios/[id]
 
 Example:
 
-curl -H "Content-Type:application/octet-stream" --data-binary @audio.wav http://localhost:4567/api/papa/audios/19
+   curl -H "Content-Type:application/octet-stream" --data-binary @audio.wav http://13.71.156.156:4567/api/papa/audios/19
 
 #### send stamp text
 
-POST /api/<from>/stamps
+POST /api/[from]/stamps
 
-- <from>: child or papa
+- [from]: child or papa
 
 request data
 
@@ -45,25 +45,25 @@ request data
 
 Example:
 
-curl -d "to=child" http://localhost:4567/api/papa/stamps
+curl -d "to=child" http://13.71.156.156:4567/api/papa/stamps
 
--> {"content":{"id":19,"from":"papa","to":"child","type":"stamp","message":null,"created_at":"2016-03-20T12:26:02+09:00"},"post_path":"/api/papa/stamps/19","status":"ok"}
+   -> {"content":{"id":19,"from":"papa","to":"child","type":"stamp","message":null,"created_at":"2016-03-20T12:26:02+09:00"},"post_path":"/api/papa/stamps/19","status":"ok"}
 
 Then post audio binary data. use response "post_path" key's value (ex. "/api/papa/stamps/19")
 
 #### send stamp binary data
 
-POST /api/<from>/stamps/<id>
+POST /api/[from]/stamps/[id]
 
 Example:
 
-curl -H "Content-Type:application/octet-stream" --data-binary @stamp.png http://localhost:4567/api/papa/stamps/19
+   curl -H "Content-Type:application/octet-stream" --data-binary @stamp.png http://13.71.156.156:4567/api/papa/stamps/19
 
 #### get messages
 
-GET /api/<user>/stamps
+GET /api/[user]/stamps
 
-- <user>: child or papa
+- [user]: child or papa
 
 Query
 
@@ -72,13 +72,13 @@ Query
 
 Example:
 
-curl "http://localhost:4567/api/papa/messages?since=2016-03-20T11:44:44+09:00"
+   curl "http://13.71.156.156:4567/api/papa/messages?since=2016-03-20T11:44:44+09:00"
 
 Audio message
 
--> [{"id":2,"from":"papa","to":"child","type":"audio","message":"Hello","url":"http://13.71.156.156:4567/api/messages/2.wav","created_at":"2016-03-20T15:21:46+09:00"}]
+   -> [{"id":2,"from":"papa","to":"child","type":"audio","message":"Hello","url":"http://13.71.156.156:4567/api/messages/2.wav","created_at":"2016-03-20T15:21:46+09:00"}]
 
 Stamp message
 
--> [{"id":1,"from":"papa","to":"child","type":"stamp","message":"Hello","url":"http://13.71.156.156:4567/api/messages/1.png","created_at":"2016-03-20T15:21:46+09:00"}]
+   -> [{"id":1,"from":"papa","to":"child","type":"stamp","message":"Hello","url":"http://13.71.156.156:4567/api/messages/1.png","created_at":"2016-03-20T15:21:46+09:00"}]
 
