@@ -37,7 +37,7 @@ class User
 
   property :id, String, :key => true
   property :name, String
-  property :token_android, String
+  property :token_android, Text
 end
 
 DataMapper.finalize
