@@ -8,6 +8,8 @@ gem 'json'
 gem 'data_mapper'
 gem 'dm-sqlite-adapter'
 
+gem 'gcm'
+
 
 gem "shotgun"
 

@@ -55,9 +55,16 @@ GEM
     do_sqlite3 (0.10.17)
       data_objects (= 0.10.17)
     fastercsv (1.5.5)
+    gcm (0.1.1)
+      httparty
+      json
+    httparty (0.13.7)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     json (1.8.3)
     json_pure (1.8.3)
     multi_json (1.11.2)
+    multi_xml (0.5.5)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -86,6 +93,7 @@ PLATFORMS
 DEPENDENCIES
   data_mapper
   dm-sqlite-adapter
+  gcm
   json
   shotgun
   sinatra

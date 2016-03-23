@@ -1,3 +1,5 @@
+# coding: utf-8
+
 require 'rubygems'
 
 require 'sinatra'
@@ -7,14 +9,16 @@ require 'json'
 require 'data_mapper'
 require 'time'
 
+require 'gcm'
+
 enable :reloader
 set :json_content_type, :js
-
-store = {'papa' =>  [], 'mama' => [], 'child' => []}
 
 DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/messages.db")
 
 URL = "http://13.71.156.156:4567"
+
+GCM_API_KEY = ENV['GCM_API_KEY']
 
 class Message
   include DataMapper::Resource
@@ -28,8 +32,17 @@ class Message
   property :created_at, DateTime
 end
 
+class User
+  include DataMapper::Resource
+
+  property :id, String, :key => true
+  property :name, String
+  property :token_android, String
+end
+
 DataMapper.finalize
 Message.auto_upgrade!
+User.auto_upgrade!
 
 class AnoneApp < Sinatra::Base
   def ok body = {}
@@ -53,6 +66,12 @@ class AnoneApp < Sinatra::Base
     )
   end
 
+  get '/test/:token/:message' do
+    ok({:result => GCM.new(GCM_API_KEY).send_notification(
+          [params[:token]],
+          {:data => {'message' => params[:message]}})})
+  end
+
   def ok_with_create type, &cons_post_url
     message = create_message(type, params)
     ok({"content" => message,
@@ -69,6 +88,14 @@ class AnoneApp < Sinatra::Base
       URL + "/api/#{params[:from]}/stamps/#{message[:id]}"}
   end
 
+  def notify token, message
+    return unless token
+
+    GCM.new(GCM_API_KEY).send_notification(
+      [token],
+      {:data => {'message' => message}})
+  end
+
   def ok_with_binary_save id, path, url
     File.open(path, "wb") do |f|
       f.write(request.body.read)
@@ -77,6 +104,9 @@ class AnoneApp < Sinatra::Base
     message = Message.get(id)
     message.url = url
     message.save
+
+    user = User.get(message.to)
+    notify user.token_android, "メッセージが届きました!" if user
 
     ok
   end
@@ -120,4 +150,11 @@ class AnoneApp < Sinatra::Base
       message.attributes
     }.to_json
   end
+
+  post '/api/:user/token/android' do
+    user = User.first_or_create(:id => params[:user])
+    user.token_android = params[:token]
+    user.save
+  end
 end
+
