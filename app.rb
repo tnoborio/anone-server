@@ -38,6 +38,7 @@ class User
   property :id, String, :key => true
   property :name, String
   property :token_android, Text
+  property :iot_message, String
 end
 
 DataMapper.finalize
@@ -105,8 +106,10 @@ class AnoneApp < Sinatra::Base
     message.url = url
     message.save
 
-    user = User.get(message.to)
-    notify user.token_android, "メッセージが届きました!" if user
+    user = User.first_or_create(:id => message.to)
+    notify user.token_android, "メッセージが届きました!" if user.token_android
+    user.iot_message = "stamp"
+    user.save
 
     ok
   end
@@ -155,6 +158,15 @@ class AnoneApp < Sinatra::Base
     user = User.first_or_create(:id => params[:user])
     user.token_android = params[:token]
     user.save
+  end
+
+  get '/api/:user/iot_message' do
+    user = User.first_or_create(:id => params[:user])
+    message = user.iot_message
+    user.iot_message = ''
+    user.save
+
+    message
   end
 end
 
