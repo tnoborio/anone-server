@@ -54,7 +54,7 @@ class AnoneApp < Sinatra::Base
   end
 
   get '/' do
-    'Hello anone app!'
+    'Hello anone app!!'
   end
 
   def create_message type, params
@@ -84,8 +84,9 @@ class AnoneApp < Sinatra::Base
       URL + "/api/#{params[:from]}/audios/#{message[:id]}"}
   end
 
-  post '/api/:from/stamps' do
+  post '/api/:from/stamps/to/:to' do
     ok_with_create(:stamp) {|message|
+      p message
       URL + "/api/#{params[:from]}/stamps/#{message[:id]}"}
   end
 
@@ -106,10 +107,14 @@ class AnoneApp < Sinatra::Base
     message.url = url
     message.save
 
+    p message
+
     user = User.first_or_create(:id => message.to)
     notify user.token_android, "メッセージが届きました!" if user.token_android
     user.iot_message = "stamp"
     user.save
+
+    p user
 
     ok
   end
@@ -143,11 +148,15 @@ class AnoneApp < Sinatra::Base
     limit = 1
     limit = params[:limit].to_i if params[:limit]
     messages = if params[:since]
+                 p Time.parse(params[:since])
                  Message.all(:order => [ :id.asc ],
-                             :created_at.lt => Time.parse(params[:since]),
+                             :created_at.gt => Time.parse(params[:since]),
+                             :limit => limit)
+                 Message.all(:order => [ :id.asc ],
+                             :created_at.gt => Time.parse(params[:since]),
                              :limit => limit)
                else
-                 Message.all(:order => [ :id.asc ], :limit => limit)
+                 Message.all(:limit => limit).reverse.map{|m|m}.reverse
                end
     messages.map {|message|
       message.attributes
